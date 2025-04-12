@@ -7,7 +7,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
 # Load the data
-df = pd.read_parquet("cleaned_aviation_data_v3.parquet")
+df = pd.read_parquet("../cleaned_aviation_data_v3.parquet")
+
 df["same_continent"] = df["departure_continent"] == df["arrival_continent"]
 df["same_country"] = df["departure_country"] == df["arrival_country"]
 
@@ -15,9 +16,9 @@ df["same_country"] = df["departure_country"] == df["arrival_country"]
 df["domestic"] = df["domestic"].astype("bool")
 X = df[
     [
-        # "acft_class",
-        # # "seats",
-        # "n_flights",
+        "acft_class",
+        # "seats",
+        "n_flights",
         # "departure_country",
         # "departure_continent",
         # "arrival_country",
@@ -25,9 +26,9 @@ X = df[
         # "domestic",
         "ask",
         "rpk",
-        # "fuel_burn",
-        # "same_continent",
-        # "same_country",
+        "fuel_burn",
+        "same_continent",
+        "same_country",
     ]
 ]
 y = df["co2_per_distance"]
