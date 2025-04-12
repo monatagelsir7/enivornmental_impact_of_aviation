@@ -1,124 +1,75 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "31dd5da1",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "📊 Validation Set Evaluation\n",
-      "MAE (val): 1459.391993386905\n",
-      "R² (val): 0.48435559077700796\n",
-      "\n",
-      "🧪 Test Set Evaluation\n",
-      "MAE (test): 1478.4285446516506\n",
-      "R² (test): 0.4944795368667263\n"
-     ]
-    }
-   ],
-   "source": [
-    "import pandas as pd\n",
-    "from sklearn.model_selection import train_test_split\n",
-    "from sklearn.linear_model import LinearRegression\n",
-    "from sklearn.metrics import mean_absolute_error, r2_score\n",
-    "from sklearn.preprocessing import StandardScaler\n",
-    "from sklearn.compose import ColumnTransformer\n",
-    "from sklearn.pipeline import Pipeline\n",
-    "\n",
-    "# Load the data\n",
-    "df = pd.read_parquet(\"cleaned_aviation_data_v3.parquet\")\n",
-    "df[\"same_continent\"] = df[\"departure_continent\"] == df[\"arrival_continent\"]\n",
-    "df[\"same_country\"] = df[\"departure_country\"] == df[\"arrival_country\"]\n",
-    "\n",
-    "\n",
-    "df[\"domestic\"] = df[\"domestic\"].astype(\"bool\")\n",
-    "X = df[\n",
-    "    [\n",
-    "        \"acft_class\",\n",
-    "        # \"seats\",\n",
-    "        \"n_flights\",\n",
-    "        \"departure_country\",\n",
-    "        \"departure_continent\",\n",
-    "        \"arrival_country\",\n",
-    "        \"arrival_continent\",\n",
-    "        \"domestic\",\n",
-    "        \"ask\",\n",
-    "        \"rpk\",\n",
-    "        \"fuel_burn\",\n",
-    "        \"same_continent\",\n",
-    "        \"same_country\",\n",
-    "    ]\n",
-    "]\n",
-    "y = df[\"co2_per_distance\"]\n",
-    "\n",
-    "# One-hot encode categorical variables\n",
-    "X = pd.get_dummies(X, drop_first=True)\n",
-    "########################\n",
-    "\n",
-    "numeric_features = [\"n_flights\", \"ask\", \"rpk\", \"fuel_burn\"]\n",
-    "categorical_features = [col for col in X.columns if col not in numeric_features]\n",
-    "\n",
-    "# Build ColumnTransformer\n",
-    "preprocessor = ColumnTransformer(\n",
-    "    transformers=[\n",
-    "        (\"num\", StandardScaler(), numeric_features),\n",
-    "        (\"cat\", \"passthrough\", categorical_features),\n",
-    "    ]\n",
-    ")\n",
-    "\n",
-    "# Build pipeline\n",
-    "pipeline = Pipeline(\n",
-    "    steps=[(\"preprocessor\", preprocessor), (\"regressor\", LinearRegression())]\n",
-    ")\n",
-    "\n",
-    "# Split data\n",
-    "X_train_val, X_test, y_train_val, y_test = train_test_split(\n",
-    "    X, y, test_size=0.2, random_state=42\n",
-    ")\n",
-    "X_train, X_val, y_train, y_val = train_test_split(\n",
-    "    X_train_val, y_train_val, test_size=0.2, random_state=42\n",
-    ")\n",
-    "\n",
-    "# Fit pipeline\n",
-    "pipeline.fit(X_train, y_train)\n",
-    "\n",
-    "# Evaluate\n",
-    "y_val_pred = pipeline.predict(X_val)\n",
-    "y_test_pred = pipeline.predict(X_test)\n",
-    "\n",
-    "print(\"📊 Validation Set Evaluation\")\n",
-    "print(\"MAE (val):\", mean_absolute_error(y_val, y_val_pred))\n",
-    "print(\"R² (val):\", r2_score(y_val, y_val_pred))\n",
-    "\n",
-    "print(\"\\n🧪 Test Set Evaluation\")\n",
-    "print(\"MAE (test):\", mean_absolute_error(y_test, y_test_pred))\n",
-    "print(\"R² (test):\", r2_score(y_test, y_test_pred))"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "base",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.12.7"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+
+# Load the data
+df = pd.read_parquet("cleaned_aviation_data_v3.parquet")
+df["same_continent"] = df["departure_continent"] == df["arrival_continent"]
+df["same_country"] = df["departure_country"] == df["arrival_country"]
+
+
+df["domestic"] = df["domestic"].astype("bool")
+X = df[
+    [
+        # "acft_class",
+        # # "seats",
+        # "n_flights",
+        # "departure_country",
+        # "departure_continent",
+        # "arrival_country",
+        # "arrival_continent",
+        # "domestic",
+        "ask",
+        "rpk",
+        # "fuel_burn",
+        # "same_continent",
+        # "same_country",
+    ]
+]
+y = df["co2_per_distance"]
+
+# One-hot encode categorical variables
+X = pd.get_dummies(X, drop_first=True)
+
+numeric_features = ["ask", "rpk"]
+categorical_features = [col for col in X.columns if col not in numeric_features]
+
+# Build ColumnTransformer
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("num", StandardScaler(), numeric_features),
+        ("cat", "passthrough", categorical_features),
+    ]
+)
+
+# Build pipeline
+pipeline = Pipeline(
+    steps=[("preprocessor", preprocessor), ("regressor", LinearRegression())]
+)
+
+# Split data
+X_train_val, X_test, y_train_val, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+X_train, X_val, y_train, y_val = train_test_split(
+    X_train_val, y_train_val, test_size=0.2, random_state=42
+)
+
+# Fit pipeline
+pipeline.fit(X_train, y_train)
+
+# Evaluate
+y_val_pred = pipeline.predict(X_val)
+y_test_pred = pipeline.predict(X_test)
+
+print("📊 Validation Set Evaluation")
+print("MAE (val):", mean_absolute_error(y_val, y_val_pred))
+print("R² (val):", r2_score(y_val, y_val_pred))
+
+print("\n🧪 Test Set Evaluation")
+print("MAE (test):", mean_absolute_error(y_test, y_test_pred))
+print("R² (test):", r2_score(y_test, y_test_pred))
