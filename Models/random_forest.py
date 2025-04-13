@@ -56,29 +56,31 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
 
 # Load datasets
-X_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_train.parquet")
-X_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_test.parquet")
-X_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_val.parquet")
-y_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_train.parquet").squeeze()
-y_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_test.parquet").squeeze()
-y_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_val.parquet").squeeze()
+X_train = pd.read_parquet(r"Test-Train-Validation Data/X_train.parquet")
+X_test = pd.read_parquet(r"Test-Train-Validation Data/X_test.parquet")
+X_val = pd.read_parquet(r"Test-Train-Validation Data/X_val.parquet")
+y_train = pd.read_parquet(r"Test-Train-Validation Data/y_train.parquet").squeeze()
+y_test = pd.read_parquet(r"Test-Train-Validation Data/y_test.parquet").squeeze()
+y_val = pd.read_parquet(r"Test-Train-Validation Data/y_val.parquet").squeeze()
 
 # Identify categorical columns
-categorical_cols = X_train.select_dtypes(include=['object', 'category']).columns.tolist()
+categorical_cols = X_train.select_dtypes(
+    include=["object", "category"]
+).columns.tolist()
 
 # Define preprocessing
 preprocessor = ColumnTransformer(
-    transformers=[
-        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols)
-    ],
-    remainder='passthrough'  # keep numerical columns as they are
+    transformers=[("cat", OneHotEncoder(handle_unknown="ignore"), categorical_cols)],
+    remainder="passthrough",  # keep numerical columns as they are
 )
 
 # Build pipeline
-rf_pipeline = Pipeline(steps=[
-    ('preprocessor', preprocessor),
-    ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
-])
+rf_pipeline = Pipeline(
+    steps=[
+        ("preprocessor", preprocessor),
+        ("regressor", RandomForestRegressor(n_estimators=100, random_state=42)),
+    ]
+)
 
 # Train the model
 rf_pipeline.fit(X_train, y_train)
