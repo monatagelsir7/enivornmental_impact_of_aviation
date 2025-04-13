@@ -1,47 +1,70 @@
-
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.preprocessing import StandardScaler
-X_train=pd.read_parquet("Test-Train-Validation Data/X_train.parquet")
-X_val=pd.read_parquet("Test-Train-Validation Data/X_val.parquet")
-X_test=pd.read_parquet("Test-Train-Validation Data/X_test.parquet")
-y_train=pd.read_parquet("Test-Train-Validation Data/y_train.parquet")
-y_val=pd.read_parquet("Test-Train-Validation Data/y_val.parquet")
-y_test=pd.read_parquet("Test-Train-Validation Data/y_test.parquet")
-y_train = y_train.squeeze()
-y_val = y_val.squeeze()
-y_test = y_test.squeeze()
-categorical_columns = X_train.select_dtypes(include=['object', 'category', 'bool']).columns.tolist()
-numerical_columns = [col for col in X_train.columns if col not in categorical_columns]
+
+# Load the data
+df = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet")
+
+# # Define features and target
+# X = df[['acft_class', 'seats', 'n_flights', 'departure_country', 'departure_continent',
+#         'arrival_country', 'arrival_continent', 'domestic', 'ask', 'rpk', 'fuel_burn']]
+# y = df['co2_per_distance']
+
+X_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_train.parquet")
+X_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_test.parquet")
+X_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_val.parquet")
+y_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_train.parquet").squeeze()
+y_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_test.parquet").squeeze()
+y_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_val.parquet").squeeze()
+
+# Define features and target
+X = df[['acft_class', 'n_flights', 'departure_continent', 'arrival_continent', 'domestic', 'ask', 'rpk', 'fuel_burn']]
+y = df['co2_per_distance']
+
+# One-hot encode categorical variables
+X = pd.get_dummies(X, drop_first=True)
+
+# Split into train + validation and test sets (80% train_val, 20% test)
+X_train_val, X_test, y_train_val, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Split train + validation into separate train and validation sets (now 64% train, 16% val)
+X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.2, random_state=42)
+
+# Initialize the StandardScaler
 scaler = StandardScaler()
 
-X_train_scaled_num = pd.DataFrame(scaler.fit_transform(X_train[numerical_columns]), 
-                                  columns=numerical_columns, 
-                                  index=X_train.index)
-X_val_scaled_num = pd.DataFrame(scaler.transform(X_val[numerical_columns]), 
-                                columns=numerical_columns, 
-                                index=X_val.index)
-X_test_scaled_num = pd.DataFrame(scaler.transform(X_test[numerical_columns]), 
-                                 columns=numerical_columns, 
-                                 index=X_test.index)
+# Fit the scaler on the training data and transform the training data
+X_train_scaled = scaler.fit_transform(X_train)
 
-X_train_scaled = pd.concat([X_train_scaled_num, X_train[categorical_columns]], axis=1)
-X_val_scaled = pd.concat([X_val_scaled_num, X_val[categorical_columns]], axis=1)
-X_test_scaled = pd.concat([X_test_scaled_num, X_test[categorical_columns]], axis=1)
+# Transform the validation and test data based on the training data scaling
+X_val_scaled = scaler.transform(X_val)
+X_test_scaled = scaler.transform(X_test)
+
 # Train the model on scaled training data
 model = LinearRegression()
 model.fit(X_train_scaled, y_train)
+
 # Predict on scaled validation set
 y_val_pred = model.predict(X_val_scaled)
+
 # Predict on scaled test set
 y_test_pred = model.predict(X_test_scaled)
+
 # Evaluation on validation
 print("Validation Set Evaluation")
-print("MSE (val):", mean_squared_error(y_val, y_val_pred))
+print("RMSE (val):", np.sqrt(mean_squared_error(y_val, y_val_pred)))
 print("R² (val):", r2_score(y_val, y_val_pred))
+print("MAE (val):", mean_absolute_error(y_val, y_val_pred))
+
 # Evaluation on test
 print("Test Set Evaluation")
-print("MSE (test):", mean_squared_error(y_test, y_test_pred))
+print("RMSE (test):", np.sqrt(mean_squared_error(y_test, y_test_pred)))
 print("R² (test):", r2_score(y_test, y_test_pred))
+print("MAE (test):", mean_absolute_error(y_test, y_test_pred))
+
+
+
+

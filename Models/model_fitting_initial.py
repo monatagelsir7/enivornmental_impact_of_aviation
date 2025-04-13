@@ -1,3 +1,4 @@
+# Import necessary libraries
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -7,23 +8,24 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
 # Load the data
-df = pd.read_parquet("../cleaned_aviation_data_v3.parquet")
+df = pd.read_parquet("cleaned_aviation_data_v3.parquet")
 
+# Feature engineering
 df["same_continent"] = df["departure_continent"] == df["arrival_continent"]
 df["same_country"] = df["departure_country"] == df["arrival_country"]
-
-
 df["domestic"] = df["domestic"].astype("bool")
+
+# Define features and target
 X = df[
     [
         "acft_class",
-        # "seats",
+        # "seats",  # commented out
         "n_flights",
-        # "departure_country",
-        # "departure_continent",
-        # "arrival_country",
-        # "arrival_continent",
-        # "domestic",
+        "departure_country",
+        "departure_continent",
+        "arrival_country",
+        "arrival_continent",
+        "domestic",
         "ask",
         "rpk",
         "fuel_burn",
@@ -36,10 +38,11 @@ y = df["co2_per_distance"]
 # One-hot encode categorical variables
 X = pd.get_dummies(X, drop_first=True)
 
-numeric_features = ["ask", "rpk"]
+# Identify numeric and categorical features
+numeric_features = ["n_flights", "ask", "rpk", "fuel_burn"]
 categorical_features = [col for col in X.columns if col not in numeric_features]
 
-# Build ColumnTransformer
+# Build ColumnTransformer for preprocessing
 preprocessor = ColumnTransformer(
     transformers=[
         ("num", StandardScaler(), numeric_features),
@@ -47,12 +50,12 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# Build pipeline
+# Build pipeline with preprocessing and linear regression
 pipeline = Pipeline(
     steps=[("preprocessor", preprocessor), ("regressor", LinearRegression())]
 )
 
-# Split data
+# Split the data into train, validation, and test sets
 X_train_val, X_test, y_train_val, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
@@ -60,10 +63,10 @@ X_train, X_val, y_train, y_val = train_test_split(
     X_train_val, y_train_val, test_size=0.2, random_state=42
 )
 
-# Fit pipeline
+# Fit the pipeline on the training data
 pipeline.fit(X_train, y_train)
 
-# Evaluate
+# Predict and evaluate on validation and test sets
 y_val_pred = pipeline.predict(X_val)
 y_test_pred = pipeline.predict(X_test)
 
