@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 
 # Load the data
 df = pd.read_parquet(
-    "/Users/ilseoplee/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet"
+    "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/cleaned_aviation_data_v3.parquet"
 )
 
 # # Define features and target
@@ -16,22 +16,22 @@ df = pd.read_parquet(
 # y = df['co2_per_distance']
 
 X_train = pd.read_parquet(
-    "/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_train.parquet"
+    "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_train.parquet"
 )
 X_test = pd.read_parquet(
-    "/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_test.parquet"
+    "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_test.parquet"
 )
 X_val = pd.read_parquet(
-    "/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_val.parquet"
+    "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_val.parquet"
 )
 y_train = pd.read_parquet(
-    "/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_train.parquet"
+    "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_train.parquet"
 ).squeeze()
 y_test = pd.read_parquet(
-    "/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_test.parquet"
+    "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_test.parquet"
 ).squeeze()
 y_val = pd.read_parquet(
-    "/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_val.parquet"
+    "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_val.parquet"
 ).squeeze()
 
 # Define features and target
