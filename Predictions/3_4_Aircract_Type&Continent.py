@@ -51,7 +51,7 @@ print(f"Mean Absolute Error (MAE): {mae_val:.4f}")
 # -------------------- Prediction(Aircraft) + Visualization --------------------
 
 # Load full dataset
-df = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Models/")
+df = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet")
 print("Full dataset loaded!")
 
 # Handle missing values
@@ -92,7 +92,7 @@ plt.title('Predicted CO₂ per Distance by Aircraft Type', fontsize=16)
 plt.xlabel('CO₂ per Distance (kg/km)', fontsize=14)
 plt.grid(True, axis='x', linestyle='--', alpha=0.7)
 plt.tight_layout()
-plt.savefig("/Users/ilseoplee/enivornmental_impact_of_aviation/aircraft_co2_analysis.png")
+plt.savefig("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/aircraft_co2_analysis.png")
 plt.show()
 
 
