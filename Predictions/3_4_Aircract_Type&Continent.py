@@ -6,12 +6,12 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import matplotlib.pyplot as plt
 import joblib
 
-X_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_train.parquet")
-X_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_test.parquet")
-X_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_val.parquet")
-y_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_train.parquet").squeeze()
-y_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_test.parquet").squeeze()
-y_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_val.parquet").squeeze()
+X_train = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_train.parquet")
+X_test = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_test.parquet")
+X_val = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_val.parquet")
+y_train = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_train.parquet").squeeze()
+y_test = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_test.parquet").squeeze()
+y_val = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_val.parquet").squeeze()
 
 print("Training/Validation/Test data loaded")
 
@@ -20,8 +20,8 @@ rf_model.fit(X_train, y_train)
 print("Model training completed")
 
 # Save model and feature columns
-joblib.dump(rf_model, "/Users/ilseoplee/enivornmental_impact_of_aviation/Models/rf_model.pkl")
-joblib.dump(X_train.columns.tolist(), "/Users/ilseoplee/enivornmental_impact_of_aviation/Models/feature_columns.pkl")
+joblib.dump(rf_model, "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Models/rf_model.pkl")
+joblib.dump(X_train.columns.tolist(), "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Models/feature_columns.pkl")
 print("Model and feature columns saved")
 
 # Evaluate on Test Set
@@ -51,7 +51,7 @@ print(f"Mean Absolute Error (MAE): {mae_val:.4f}")
 # -------------------- Prediction(Aircraft) + Visualization --------------------
 
 # Load full dataset
-df = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet")
+df = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet")
 print("Full dataset loaded!")
 
 # Handle missing values
@@ -64,8 +64,8 @@ for col in df.columns:
 print("Missing values handled!")
 
 # Load model and feature columns
-rf_model = joblib.load("/Users/ilseoplee/enivornmental_impact_of_aviation/Models/rf_model.pkl")
-feature_columns = joblib.load("/Users/ilseoplee/enivornmental_impact_of_aviation/Models/feature_columns.pkl")
+rf_model = joblib.load("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Models/rf_model.pkl")
+feature_columns = joblib.load("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Models/feature_columns.pkl")
 print("Model and feature columns loaded!")
 
 # Prepare features
@@ -92,14 +92,14 @@ plt.title('Predicted CO₂ per Distance by Aircraft Type', fontsize=16)
 plt.xlabel('CO₂ per Distance (kg/km)', fontsize=14)
 plt.grid(True, axis='x', linestyle='--', alpha=0.7)
 plt.tight_layout()
-plt.savefig("/Users/ilseoplee/enivornmental_impact_of_aviation/aircraft_co2_analysis.png")
+plt.savefig("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/aircraft_co2_analysis.png")
 plt.show()
 
 
 # -------------------- Prediction(Continent) + Visualization --------------------
 
 # Load full dataset
-df = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet")
+df = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet")
 print("Full dataset loaded!")
 
 # Handle missing values
@@ -112,8 +112,8 @@ for col in df.columns:
 print("Missing values handled!")
 
 # Load model and feature columns (trained for continent prediction)
-rf_model = joblib.load("/Users/ilseoplee/enivornmental_impact_of_aviation/Models/rf_model.pkl")
-feature_columns = joblib.load("/Users/ilseoplee/enivornmental_impact_of_aviation/Models/feature_columns.pkl")
+rf_model = joblib.load("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/Models/rf_model.pkl")
+feature_columns = joblib.load("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/Models/feature_columns.pkl")
 print("Model and feature columns loaded!")
 
 # Prepare features
@@ -141,5 +141,5 @@ plt.xlabel('CO₂ per Distance (kg/km)', fontsize=14)
 plt.ylabel('Continent Pair (Departure -> Arrival)', fontsize=14)
 plt.grid(True, axis='x', linestyle='--', alpha=0.7)
 plt.tight_layout()
-plt.savefig("/Users/ilseoplee/enivornmental_impact_of_aviation/continent_co2_analysis.png")
+plt.savefig("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/continent_co2_analysis.png")
 plt.show()

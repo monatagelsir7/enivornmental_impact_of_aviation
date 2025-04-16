@@ -7,12 +7,12 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
 
 # Load datasets
-X_train = pd.read_parquet(r"Test-Train-Validation Data/X_train.parquet")
-X_test = pd.read_parquet(r"Test-Train-Validation Data/X_test.parquet")
-X_val = pd.read_parquet(r"Test-Train-Validation Data/X_val.parquet")
-y_train = pd.read_parquet(r"Test-Train-Validation Data/y_train.parquet").squeeze()
-y_test = pd.read_parquet(r"Test-Train-Validation Data/y_test.parquet").squeeze()
-y_val = pd.read_parquet(r"Test-Train-Validation Data/y_val.parquet").squeeze()
+X_train = pd.read_parquet(r"https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_train.parquet")
+X_test = pd.read_parquet(r"https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_test.parquet")
+X_val = pd.read_parquet(r"https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_val.parquet")
+y_train = pd.read_parquet(r"https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_train.parquet").squeeze()
+y_test = pd.read_parquet(r"https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_test.parquet").squeeze()
+y_val = pd.read_parquet(r"https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_val.parquet").squeeze()
 
 # Identify categorical columns
 categorical_cols = X_train.select_dtypes(

@@ -4,7 +4,7 @@
 # import pandas as pd
 # import numpy as np
 
-# df = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet")
+# df = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/cleaned_aviation_data_v3.parquet")
 
 # # X = df[['acft_class', 'seats', 'n_flights', 'departure_country', 'departure_continent',
 # #         'arrival_country', 'arrival_continent', 'domestic', 'ask', 'rpk', 'fuel_burn']]
@@ -16,12 +16,12 @@
 
 # X_encoded = pd.get_dummies(X, drop_first=True)
 
-# X_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_train.parquet")
-# X_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_test.parquet")
-# X_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_val.parquet")
-# y_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_train.parquet").squeeze()
-# y_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_test.parquet").squeeze()
-# y_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_val.parquet").squeeze()
+# X_train = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_train.parquet")
+# X_test = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_test.parquet")
+# X_val = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_val.parquet")
+# y_train = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_train.parquet").squeeze()
+# y_test = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_test.parquet").squeeze()
+# y_val = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_val.parquet").squeeze()
 
 # # X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, random_state=42)
 
@@ -49,7 +49,7 @@ import pandas as pd
 import numpy as np
 
 # Load data
-df = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/cleaned_aviation_data_v3.parquet")
+df = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/cleaned_aviation_data_v3.parquet")
 
 # Define features and target
 X = df[['acft_class', 'n_flights', 'departure_continent', 'arrival_continent', 'domestic', 'ask', 'rpk', 'fuel_burn']]
@@ -59,12 +59,12 @@ y = df['co2_per_distance']
 X_encoded = pd.get_dummies(X, drop_first=True)
 
 # Load pre-split datasets
-X_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_train.parquet")
-X_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_test.parquet")
-X_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/X_val.parquet")
-y_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_train.parquet").squeeze()
-y_test = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_test.parquet").squeeze()
-y_val = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation/Test-Train-Validation Data/y_val.parquet").squeeze()
+X_train = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_train.parquet")
+X_test = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_test.parquet")
+X_val = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_val.parquet")
+y_train = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_train.parquet").squeeze()
+y_test = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_test.parquet").squeeze()
+y_val = pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/y_val.parquet").squeeze()
 
 # Train XGBoost model
 xgb_model = XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42)

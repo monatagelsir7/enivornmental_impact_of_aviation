@@ -1,6 +1,6 @@
 import pandas as pd
 
-df=pd.read_parquet("cleaned_aviation_data_v1.parquet")
+df=pd.read_parquet("https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/cleaned_aviation_data_v1.parquet")
 df["departure_continent"].value_counts()
 
 # For Departures
