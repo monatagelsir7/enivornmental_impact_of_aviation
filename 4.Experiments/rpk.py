@@ -3,6 +3,12 @@ Experiment idea
 1. rpk (Revenue Passenger Kilometers) -> co2_per_distance
 2. rpk/ask (Revenue Passenger Kilometers / Available Seat Kilometers) -> co2_per_distance
   - find optimum rpk/ask ratio (full capacity may affect the co2_per_distance)
+
+Test Summary : 
+The CO2_per_distance(km) increase steadily as the passenger load factor(RPK/ASK) ratio rises, up to approximately 0.5. 
+However, beyond this threshold, CO2_per_distance(km) begin to decline consistently. 
+This indicates that aircraft operating below a 50% the load factor may benefit from maximizing the load factor 
+ratio—such as through codeshare agreements with other carriers—to improve overall environmental efficiency.
 '''
 
 import pandas as pd
@@ -25,7 +31,7 @@ def prepare_input(raw_dict, expected_columns):
     df_encoded = df_encoded[expected_columns]
     return df_encoded
 
-# Base input data
+# Base input data(sample)
 base_input = {
     'airline_iata': 'AF',
     'acft_class': 'NB',
