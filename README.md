@@ -17,11 +17,11 @@ FOR MODELS:
 run all files in Models
 
 FOR EXPERIMENTS:
-Adil Gazder:
-Ilseop Lee:
-Yirang Liu:
-Afag Ramazanova:
-Mona Saeed:
+- Adil Gazder:
+- Ilseop Lee:
+- Yirang Liu:
+- Afag Ramazanova:
+- Mona Saeed:
 
 
 DOCUMENTATION : 
