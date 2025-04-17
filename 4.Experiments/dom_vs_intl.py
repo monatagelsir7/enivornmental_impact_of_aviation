@@ -27,6 +27,7 @@ y = domestic_df['co2_per_distance']
 X = pd.get_dummies(X, drop_first=True)
 
 X = X.loc[:, X.columns.isin(X_test.columns)]
+X_test = X_test.loc[:, X_test.columns.isin(X.columns)]
 
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
 
