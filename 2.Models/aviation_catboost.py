@@ -40,6 +40,7 @@ import matplotlib.pyplot as plt
 X_train = pd.read_parquet(
     "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/Shawn/Test-Train-Validation%20Data/X_train.parquet"
 )
+X_train.columns
 X_test = pd.read_parquet(
     "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/Shawn/Test-Train-Validation%20Data/X_test.parquet"
 )
