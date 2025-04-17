@@ -53,14 +53,14 @@ xgb_model = XGBRegressor(
     objective="reg:squarederror",
     random_state=42,
     n_jobs=-1,
-    verbosity=0
+    verbosity=0,
+    eval_metric="rmse"
 )
 
 # Train with evaluation sets to enable staged performance tracking
 xgb_model.fit(
     X_train, y_train,
     eval_set=[(X_train, y_train), (X_val, y_val), (X_test, y_test)],
-    eval_metric="rmse",
     verbose=False
 )
 
@@ -73,9 +73,9 @@ test_rmse = results['validation_2']['rmse']
 
 # Plot RMSE over boosting rounds
 plt.figure(figsize=(10, 6))
-plt.plot(range(1, 101), train_rmse, label="Train RMSE", marker='o')
-plt.plot(range(1, 101), val_rmse, label="Validation RMSE", marker='s')
-plt.plot(range(1, 101), test_rmse, label="Test RMSE", marker='^')
+plt.plot(range(1, 101), train_rmse, label="Train RMSE")
+plt.plot(range(1, 101), val_rmse, label="Validation RMSE")
+plt.plot(range(1, 101), test_rmse, label="Test RMSE")
 plt.xlabel("Number of Trees")
 plt.ylabel("RMSE")
 plt.title("XGBoost Performance (RMSE vs. Number of Trees)")
@@ -99,3 +99,5 @@ y_pred_val = xgb_model.predict(X_val)
 y_pred_test = xgb_model.predict(X_test)
 evaluate(y_val, y_pred_val, "Validation Set (XGBoost)")
 evaluate(y_test, y_pred_test, "Test Set (XGBoost)")
+
+plt.savefig("results_img/xgboost_rmse_plot.png", dpi=300)
