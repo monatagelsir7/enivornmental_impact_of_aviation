@@ -32,7 +32,7 @@ def prepare_input(raw_dict, expected_columns):
     df_encoded = df_encoded[expected_columns]
     return df_encoded
 
-# Base input data(sample) ## should be the real case
+# Base input data(sample) # This case is from rpk_sampler(real_observations) based on the median values
 base_input = {
     'airline_iata': 'AF', # Air France
     'acft_class': 'NB', # Narrow Body
