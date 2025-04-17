@@ -14,16 +14,16 @@ intl_df=df[df["domestic"]==0]
 domestic_df=domestic_df.drop_duplicates()
 intl_df=intl_df.drop_duplicates()
 
-X_test = intl_df[['airline_iata','acft_class', 'departure_country', 'departure_continent',
+X_test = domestic_df[['airline_iata','acft_class', 'departure_country', 'departure_continent',
         'arrival_country', 'arrival_continent', 'domestic', 'ask', 'rpk', 'fuel_burn', 'iata_departure', 'iata_arrival', 'acft_icao']]
-y_test = intl_df['co2_per_distance']
+y_test = domestic_df['co2_per_distance']
 X_test = pd.get_dummies(X_test, drop_first=True)
 
 
 
-X = domestic_df[['airline_iata','acft_class', 'departure_country', 'departure_continent',
+X = intl_df[['airline_iata','acft_class', 'departure_country', 'departure_continent',
         'arrival_country', 'arrival_continent', 'domestic', 'ask', 'rpk', 'fuel_burn', 'iata_departure', 'iata_arrival', 'acft_icao']]
-y = domestic_df['co2_per_distance']
+y = intl_df['co2_per_distance']
 X = pd.get_dummies(X, drop_first=True)
 
 X = X.loc[:, X.columns.isin(X_test.columns)]

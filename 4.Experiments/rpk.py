@@ -2,9 +2,10 @@
 Experiment idea
 1. rpk (Revenue Passenger Kilometers) -> co2_per_distance
 2. rpk/ask (Revenue Passenger Kilometers / Available Seat Kilometers) -> co2_per_distance
+  - Passenger load factor (RPK/ASK) is a measure of how efficiently an airline is filling seats and generating revenue.
   - find optimum rpk/ask ratio (full capacity may affect the co2_per_distance)
 
-Test Summary : 
+Test Summary
 The CO2_per_distance(km) increase steadily as the passenger load factor(RPK/ASK) ratio rises, up to approximately 0.5. 
 However, beyond this threshold, CO2_per_distance(km) begin to decline consistently. 
 This indicates that aircraft operating below a 50% the load factor may benefit from maximizing the load factor 
@@ -31,57 +32,90 @@ def prepare_input(raw_dict, expected_columns):
     df_encoded = df_encoded[expected_columns]
     return df_encoded
 
-# Base input data(sample)
+# Base input data(sample) # CASE selected from rpk_sampler
 base_input = {
-    'airline_iata': 'AF',
-    'acft_class': 'NB',
-    'departure_country': 'France',
-    'departure_continent': 'Europe',
-    'arrival_country': 'Germany',
-    'arrival_continent': 'Europe',
-    'domestic': 0,
-    'ask': 200000,
-    'fuel_burn': 12000,
-    'iata_departure': 'CDG',
-    'iata_arrival': 'FRA',
-    'acft_icao': 'A320'
+    'airline_iata': 'AF', # Air France
+    'acft_class': 'NB', # Narrow Body
+    'acft_icao': 'A321', # Airbus A321
+    'departure_continent': 'EU', # Europe 
+    'departure_country': 'CH', # Switzerland
+    'iata_departure': 'ZRH', # Zurich Airport
+    'arrival_continent': 'EU', # Europe
+    'arrival_country': 'FR', # France
+    'iata_arrival': 'CDG', # Charles de Gaulle Airport
+    'domestic': 0, # 0 = intl, 1 = domestic
+    'ask': 1400814.103, # Index 94298
+    'fuel_burn': 45330.2042, # # Index 94298
 }
 
+
 # RPK test
-rpk_values = np.linspace(50000, 300000, 50)
-predictions = []
+load_factors = np.linspace(0.25, 1.0, 50)
+rpk_values = load_factors * base_input['ask']
+predictions_rpk = []
 
 for rpk in rpk_values:
     row = base_input.copy()
     row['rpk'] = rpk
     df_row = prepare_input(row, expected_columns)
     pred = model.predict(df_row)[0]
-    predictions.append(pred)
+    predictions_rpk.append(pred)
 
+# RPK vs CO₂/km
 plt.figure(figsize=(8, 5))
-plt.plot(rpk_values, predictions, marker='o')
+plt.plot(rpk_values, predictions_rpk, marker='o')
 plt.xlabel('RPK (Revenue Passenger Kilometers)')
 plt.ylabel('Predicted CO₂ per km')
-plt.title('Relationship between RPK and CO₂/km')
+plt.title('RPK vs Predicted CO₂/km')
 plt.grid(True)
 plt.show()
 
-# Load Factor (RPK/ASK) test
-ask_fixed = 200000
-load_factors = np.linspace(0.25, 1.0, 50)
-predictions = []
+# Passenger Load Factor → co2_per_distance
+predictions_lf = []
 
 for lf in load_factors:
     row = base_input.copy()
-    row['rpk'] = lf * ask_fixed
+    row['rpk'] = lf * row['ask']
     df_row = prepare_input(row, expected_columns)
     pred = model.predict(df_row)[0]
-    predictions.append(pred)
+    predictions_lf.append(pred)
 
-plt.figure(figsize=(8,5))
-plt.plot(load_factors, predictions, marker='o')
-plt.xlabel('Load Factor (RPK / ASK)')
+# Load Factor vs CO₂/km
+plt.figure(figsize=(8, 5))
+plt.plot(load_factors, predictions_lf)
+plt.xlabel('Passenger Load Factor (RPK / ASK)')
 plt.ylabel('Predicted CO₂ per km')
 plt.title('Effect of Load Factor on CO₂/km')
 plt.grid(True)
 plt.show()
+
+
+## Data Chekck ##
+
+# y_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation-2/Test-Train-Validation Data/y_train.parquet")
+# y_train.describe()
+
+# X_train[['ask', 'rpk', 'fuel_burn']].describe()
+
+
+'''
+Corner Case = INVALID
+
+base_input = {
+    'airline_iata': 'DL', # Delta Airlines
+    'acft_class': 'NB', # Narrow Body
+    'acft_icao': 'B752', # Boeing 757-200
+    'departure_continent': 'NA', # North America
+    'departure_country': 'US', # United States
+    'iata_departure': 'JFK', # John F. Kennedy International Airport
+    'arrival_continent': 'EU', # Europe
+    'arrival_country': 'PT', # Portugal
+    'iata_arrival': 'PDL', # Lisbon Airport
+    'domestic': 0, # 0 = intl, 1 = domestic
+    'ask': 82820253, # Index 43126
+    'fuel_burn': 1960306.74177513, # # Index 43126 Boeing 757-200 (JFK - LIS)
+}
+
+'''
+
+
