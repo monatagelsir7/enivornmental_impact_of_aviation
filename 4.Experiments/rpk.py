@@ -32,7 +32,7 @@ def prepare_input(raw_dict, expected_columns):
     df_encoded = df_encoded[expected_columns]
     return df_encoded
 
-# Base input data(sample) # CASE selected from rpk_sampler
+# Base input data(sample) ## should be the real case
 base_input = {
     'airline_iata': 'AF', # Air France
     'acft_class': 'NB', # Narrow Body
@@ -82,40 +82,9 @@ for lf in load_factors:
 
 # Load Factor vs CO₂/km
 plt.figure(figsize=(8, 5))
-plt.plot(load_factors, predictions_lf)
+plt.plot(load_factors, predictions_lf, marker='o')
 plt.xlabel('Passenger Load Factor (RPK / ASK)')
 plt.ylabel('Predicted CO₂ per km')
 plt.title('Effect of Load Factor on CO₂/km')
 plt.grid(True)
 plt.show()
-
-
-## Data Chekck ##
-
-# y_train = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation-2/Test-Train-Validation Data/y_train.parquet")
-# y_train.describe()
-
-# X_train[['ask', 'rpk', 'fuel_burn']].describe()
-
-
-'''
-Corner Case = INVALID
-
-base_input = {
-    'airline_iata': 'DL', # Delta Airlines
-    'acft_class': 'NB', # Narrow Body
-    'acft_icao': 'B752', # Boeing 757-200
-    'departure_continent': 'NA', # North America
-    'departure_country': 'US', # United States
-    'iata_departure': 'JFK', # John F. Kennedy International Airport
-    'arrival_continent': 'EU', # Europe
-    'arrival_country': 'PT', # Portugal
-    'iata_arrival': 'PDL', # Lisbon Airport
-    'domestic': 0, # 0 = intl, 1 = domestic
-    'ask': 82820253, # Index 43126
-    'fuel_burn': 1960306.74177513, # # Index 43126 Boeing 757-200 (JFK - LIS)
-}
-
-'''
-
-

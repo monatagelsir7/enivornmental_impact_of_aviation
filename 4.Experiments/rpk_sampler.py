@@ -55,5 +55,5 @@ base_input_candidate = nearest_row[[
 print(base_input_candidate)
 
 
-checker = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation-2/0.Data_after_cleaning/cleaned_aviation_data_v3.parquet")
-checker.head(5)
+# checker = pd.read_parquet("/Users/ilseoplee/enivornmental_impact_of_aviation-2/0.Data_after_cleaning/cleaned_aviation_data_v3.parquet")
+# checker.head(5)
