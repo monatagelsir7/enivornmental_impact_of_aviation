@@ -17,9 +17,18 @@ expected_columns = X_train.columns.tolist()
 def prepare_input(raw_dict, expected_columns):
     df = pd.DataFrame([raw_dict])
     df_encoded = pd.get_dummies(df)
+
+    # Add missing columns
     for col in expected_columns:
         if col not in df_encoded.columns:
             df_encoded[col] = 0
+
+    # Remove unexpected (extra) columns
+    extra_cols = set(df_encoded.columns) - set(expected_columns)
+    if extra_cols:
+        df_encoded = df_encoded.drop(columns=extra_cols)
+
+    # Ensure correct column order
     df_encoded = df_encoded[expected_columns]
     return df_encoded
 
@@ -68,7 +77,6 @@ aircraft_list = [
     "AT43",
     "PA31",
     "A318",
-    "zzz",
     "AC90",
     "E195",
     "CRJ1",
@@ -194,11 +202,10 @@ base_input = {
     "arrival_continent": "Europe",
     "domestic": 0,
     "ask": 200000,
-    "rpk": 150000,
     "fuel_burn": 12000,
     "iata_departure": "CDG",
     "iata_arrival": "FRA",
-    "acft_icao": "A320",
+    "acft_icao": "A320",  # will vary this one
 }
 
 # Run predictions
