@@ -1,0 +1,30 @@
+According to the results shown in rpk_sample_2.png, fuel efficiency 
+(measured as CO₂ emissions per kilometer) gets worse when the load factor is below 50%. 
+However, it improves quickly once the load factor goes above that point. 
+This is likely because airplanes use a large amount of fuel regardless of how many passengers are on board. 
+As more passengers are added, the total CO₂ emissions are shared across more seat-kilometers, which makes the flight more efficient.
+
+For this reason, flying with a load factor below 50% is not a reasonable choice from either an environmental 
+or economic perspective. In such cases, strategies like code-sharing or combining flights should be considered to increase passenger numbers.
+
+It may also be useful to check whether this trend is different depending on the type of aircraft.
+The baseline input used in the simulation was selected at random. 
+To make the results more realistic, it would be better to use an example that reflects 
+either the most common case or an actual observation from the dataset.
+
+<Sample test>
+
+base_input = {
+    'airline_iata': 'AF',
+    'acft_class': 'NB',
+    'departure_country': 'France',
+    'departure_continent': 'Europe',
+    'arrival_country': 'Germany',
+    'arrival_continent': 'Europe',
+    'domestic': 0,
+    'ask': 200000,
+    'fuel_burn': 12000,
+    'iata_departure': 'CDG',
+    'iata_arrival': 'FRA',
+    'acft_icao': 'A320'
+}

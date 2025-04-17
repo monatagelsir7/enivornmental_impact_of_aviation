@@ -72,10 +72,10 @@
 # Trees:  81 | Train RMSE: 976.7938 | Val RMSE: 2264.3685 | Test RMSE: 2526.2335
 # Trees:  91 | Train RMSE: 985.8692 | Val RMSE: 2275.7229 | Test RMSE: 2533.0360
 
-# Hyperparameters: n_estimators = 610
+# Hyperparameters: n_estimators = 61
 
 
-## MODEL2 BEFORE Tuning, estimators is 100 ###
+## MODEL2 after Tuning, estimators is 61 ###
 
 import pandas as pd
 import numpy as np
@@ -123,3 +123,31 @@ print(f"Mean Absolute Error (MAE): {mean_absolute_error(y_val, y_pred_val):.4f}"
 # Save the trained model to a file
 joblib.dump(rf_model, "../2.Models/random_forest_model.pkl")
 print("Model saved to random_forest_model.pkl")
+
+### Additional analysis: Feature Importance
+
+# Feature importance by impurity
+importances = rf_model.feature_importances_
+feature_names = X_train.columns
+feat_imp_df = pd.DataFrame({
+    'Feature': feature_names,
+    'Importance': importances
+}).sort_values(by='Importance', ascending=False)
+
+# Plot
+plt.figure(figsize=(10, 6))
+plt.barh(feat_imp_df['Feature'][:20][::-1], feat_imp_df['Importance'][:20][::-1])
+plt.xlabel("Feature Importance (MDI)")
+plt.title("Top 20 Feature Importances")
+plt.tight_layout()
+plt.show()
+
+# SHAP (SHapley Additive Explanations)
+import shap
+
+# Use TreeExplainer for Random Forest
+explainer = shap.TreeExplainer(rf_model)
+shap_values = explainer.shap_values(X_val)
+
+# Summary plot
+shap.summary_plot(shap_values, X_val)
