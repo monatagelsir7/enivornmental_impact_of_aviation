@@ -26,6 +26,8 @@ X = domestic_df[['airline_iata','acft_class', 'departure_country', 'departure_co
 y = domestic_df['co2_per_distance']
 X = pd.get_dummies(X, drop_first=True)
 
+X = X[X_test.columns]
+
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # _________________________________________________________________
