@@ -31,11 +31,15 @@ def prepare_input(raw_dict, expected_columns):
 # Run experiments
 results = []
 for idx, row in sample_rows.iterrows():
-    original_class = next(
-        c.replace("acft_class_", "")
-        for c in expected_columns
-        if c.startswith("acft_class_") and row[c] == 1
-    )
+    try:
+        original_class = next(
+            c.replace("acft_class_", "")
+            for c in expected_columns
+            if c.startswith("acft_class_") and row[c] == 1
+        )
+    except StopIteration:
+        print(f"No aircraft class found for sample {idx}")
+        continue
 
     for new_class in aircraft_classes:
         modified_row = row.copy()
@@ -48,48 +52,80 @@ for idx, row in sample_rows.iterrows():
 
         # Predict
         try:
-            pred = model.predict(prepare_input(modified_row, expected_columns))[0]
+            input_df = prepare_input(modified_row, expected_columns)
+            pred = model.predict(input_df)[0]
             results.append(
                 {
                     "sample_id": idx,
                     "original_class": original_class,
                     "new_class": new_class,
-                    "predicted_co2_km": pred,
-                    "distance": row["ask"],  # Example of preserving original feature
+                    "predicted_co2_km": float(pred),  # Ensure numeric value
+                    "distance": float(row["ask"]),  # Ensure numeric value
                 }
             )
         except Exception as e:
             print(f"Error testing {original_class}→{new_class}: {str(e)}")
+            print("Problematic features:")
+            print(modified_row[modified_row != 0])  # Show non-zero features
+            continue
 
-# Analysis
+# Convert results to DataFrame
+if not results:
+    raise ValueError("No successful predictions - check error messages above")
+
 df_results = pd.DataFrame(results)
+
+# Data validation
+print("\nData Validation:")
+print(f"Total samples: {len(df_results)}")
+print("Unique classes in results:", df_results["new_class"].unique())
+print("Data types:\n", df_results.dtypes)
+
+# Filter to only include classes with data
+valid_classes = [c for c in aircraft_classes if c in df_results["new_class"].unique()]
 
 # Visualization 1: Class Comparison
 plt.figure(figsize=(14, 6))
-sns.boxplot(
-    data=df_results, x="new_class", y="predicted_co2_km", order=aircraft_classes
-)
-plt.title("CO₂/km Distribution by Aircraft Class")
-plt.xlabel("Aircraft Class")
-plt.ylabel("kg CO₂ per km")
-plt.tight_layout()
+if len(valid_classes) > 0:
+    sns.boxplot(
+        data=df_results, x="new_class", y="predicted_co2_km", order=valid_classes
+    )
+    plt.title("CO₂/km Distribution by Aircraft Class")
+    plt.xlabel("Aircraft Class")
+    plt.ylabel("kg CO₂ per km")
+    plt.tight_layout()
+else:
+    print("Warning: No valid classes for boxplot")
 
 # Visualization 2: Change Analysis
 plt.figure(figsize=(14, 6))
-for orig_class in df_results["original_class"].unique():
-    subset = df_results[df_results["original_class"] == orig_class]
-    sns.lineplot(
-        data=subset,
-        x="new_class",
-        y="predicted_co2_km",
-        label=f"Originally {orig_class}",
-        marker="o",
-        sort=False,
-    )
-plt.title("Impact of Changing Aircraft Class")
-plt.xlabel("New Aircraft Class")
-plt.ylabel("kg CO₂ per km")
-plt.legend(title="Original Class")
-plt.tight_layout()
+if len(df_results["original_class"].unique()) > 0:
+    for orig_class in sorted(df_results["original_class"].unique()):
+        subset = df_results[df_results["original_class"] == orig_class]
+        if len(subset) > 0:
+            sns.lineplot(
+                data=subset,
+                x="new_class",
+                y="predicted_co2_km",
+                label=f"Originally {orig_class}",
+                marker="o",
+                sort=False,
+                ci=None,
+            )
+    plt.title("Impact of Changing Aircraft Class")
+    plt.xlabel("New Aircraft Class")
+    plt.ylabel("kg CO₂ per km")
+    plt.legend(title="Original Class")
+    plt.tight_layout()
+else:
+    print("Warning: No data for change analysis plot")
 
 plt.show()
+
+# Additional debug output
+print("\nSample predictions:")
+print(
+    df_results.groupby(["original_class", "new_class"])["predicted_co2_km"]
+    .mean()
+    .unstack()
+)
