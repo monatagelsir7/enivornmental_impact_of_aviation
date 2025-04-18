@@ -18,18 +18,17 @@ def prepare_input(raw_dict, expected_columns):
     df = pd.DataFrame([raw_dict])
     df_encoded = pd.get_dummies(df)
 
-    # Add missing columns
+    # Ensure only expected columns are present
     for col in expected_columns:
         if col not in df_encoded.columns:
             df_encoded[col] = 0
 
-    # Remove unexpected (extra) columns
-    extra_cols = set(df_encoded.columns) - set(expected_columns)
-    if extra_cols:
-        df_encoded = df_encoded.drop(columns=extra_cols)
+    # Drop any columns not in expected_columns
+    df_encoded = df_encoded[[col for col in expected_columns]]
 
-    # Ensure correct column order
-    df_encoded = df_encoded[expected_columns]
+    # Reorder columns exactly to match training
+    df_encoded = df_encoded.reindex(columns=expected_columns, fill_value=0)
+
     return df_encoded
 
 
@@ -190,6 +189,11 @@ aircraft_list = [
     "DH2T",
     "C425",
 ]
+# Sanity Check
+valid_aircraft_list = [
+    acft for acft in aircraft_list if f"acft_icao_{acft}" in expected_columns
+]
+
 predictions = []
 
 # Base sample input
@@ -209,7 +213,7 @@ base_input = {
 }
 
 # Run predictions
-for acft in aircraft_list:
+for acft in valid_aircraft_list:
     row = base_input.copy()
     row["acft_icao"] = acft
     df_row = prepare_input(row, expected_columns)
