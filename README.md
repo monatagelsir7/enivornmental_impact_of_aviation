@@ -19,7 +19,7 @@ run all files in Models
 FOR EXPERIMENTS:
 - Adil Gazder:
 - Ilseop Lee: Passenger Load (RPK / ASR) experiment with real sample 
-- Yirang Liu:
+- Yirang Liu: Emissions of airplane type, impact of gridsearch for hyperparameter tuning
 - Afag Ramazanova:
 - Mona Saeed:
 
