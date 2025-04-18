@@ -1,203 +1,95 @@
 import pandas as pd
-import numpy as np
-import joblib
 import matplotlib.pyplot as plt
+import seaborn as sns
+import joblib
 
+# Load model and data
 model = joblib.load("../2.Models/random_forest_model.pkl")
 X_train = pd.read_parquet(
     "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_train.parquet"
 )
 expected_columns = X_train.columns.tolist()
 
-sample_rows = X_train.sample(n=3, random_state=42)
-aircraft_list = [
-    "PA32",
-    "B712",
-    "A320",
-    "B737",
-    "B752",
-    "C402",
-    "B739",
-    "DH8D",
-    "BN2P",
-    "B738",
-    "E75L",
-    "A321",
-    "E190",
-    "C208",
-    "MD87",
-    "AT76",
-    "DH8A",
-    "LJ75",
-    "A20N",
-    "DHC6",
-    "A319",
-    "E170",
-    "RJ1H",
-    "A388",
-    "E145",
-    "CRJ2",
-    "CRJ9",
-    "C172",
-    "E135",
-    "CRJ7",
-    "AT75",
-    "CRJX",
-    "MD90",
-    "SF34",
-    "B190",
-    "B753",
-    "PC12",
-    "RJ85",
-    "DHC3",
-    "AT43",
-    "PA31",
-    "A318",
-    "AC90",
-    "E195",
-    "CRJ1",
-    "AT72",
-    "B763",
-    "B77W",
-    "B772",
-    "E75S",
-    "DH8C",
-    "B788",
-    "A332",
-    "B744",
-    "AT45",
-    "BCS3",
-    "A333",
-    "A346",
-    "A359",
-    "B736",
-    "B764",
-    "BCS1",
-    "GA8",
-    "B735",
-    "A21N",
-    "B789",
-    "D328",
-    "SB20",
-    "DHC2",
-    "B77L",
-    "B748",
-    "B78X",
-    "B733",
-    "B38M",
-    "J328",
-    "CL60",
-    "DH8B",
-    "A343",
-    "B734",
-    "B74R",
-    "JS31",
-    "SU95",
-    "A342",
-    "B762",
-    "A35K",
-    "A339",
-    "B39M",
-    "BE20",
-    "BE99",
-    "A306",
-    "R44",
-    "MD11",
-    "C180",
-    "F100",
-    "A310",
-    "B350",
-    "C30J",
-    "A400",
-    "T37",
-    "A139",
-    "C56X",
-    "BE35",
-    "C212",
-    "E45X",
-    "H500",
-    "AS50",
-    "GLEX",
-    "A345",
-    "GL5T",
-    "BE9L",
-    "C441",
-    "FA7X",
-    "PA30",
-    "CL30",
-    "A119",
-    "BE55",
-    "F2TH",
-    "P180",
-    "F900",
-    "LJ45",
-    "GLF6",
-    "DC10",
-    "SW4",
-    "H25B",
-    "B732",
-    "B722",
-    "FA8X",
-    "TBM9",
-    "GA5C",
-    "C500",
-    "G150",
-    "BE10",
-    "LJ60",
-    "MU2",
-    "GALX",
-    "GLF4",
-    "C130",
-    "KODI",
-    "E120",
-    "BE40",
-    "LJ35",
-    "TBM7",
-    "DC93",
-    "D228",
-    "E35L",
-    "FA5X",
-    "DC91",
-    "P46T",
-    "MD88",
-    "TBM8",
-    "SW3",
-    "BE30",
-    "DH2T",
-    "C425",
-]
+# Configuration
+N_SAMPLES = 3
+RANDOM_STATE = 42
+aircraft_classes = ["NB", "WB", "RJ", "TP", "PJ", "PP", "OTHER", "Unknown"]
+
+# Prepare samples
+sample_rows = X_train.sample(n=N_SAMPLES, random_state=RANDOM_STATE)
 
 
 def prepare_input(raw_dict, expected_columns):
-    df = pd.DataFrame([raw_dict])
-    df_encoded = pd.get_dummies(df)
-
-    # Ensure only expected columns are present
-    for col in expected_columns:
-        if col not in df_encoded.columns:
-            df_encoded[col] = 0
-
-    # Drop any columns not in expected_columns
-    df_encoded = df_encoded[[col for col in expected_columns]]
-
-    # Reorder columns exactly to match training
-    df_encoded = df_encoded.reindex(columns=expected_columns, fill_value=0)
-
-    return df_encoded
+    """Create input DataFrame with exact expected columns"""
+    df = pd.DataFrame(0, index=[0], columns=expected_columns)
+    for col, val in raw_dict.items():
+        if col in expected_columns:
+            df[col] = val
+    return df
 
 
+# Run experiments
 results = []
-
 for idx, row in sample_rows.iterrows():
-    for acft in aircraft_list:
-        modified_row = row.copy()
-        modified_row["acft_icao"] = acft
-        df_input = prepare_input(modified_row.to_dict(), expected_columns)
+    original_class = next(
+        c.replace("acft_class_", "")
+        for c in expected_columns
+        if c.startswith("acft_class_") and row[c] == 1
+    )
 
+    for new_class in aircraft_classes:
+        modified_row = row.copy()
+        # Reset all aircraft class flags
+        for col in expected_columns:
+            if col.startswith("acft_class_"):
+                modified_row[col] = 0
+        # Set new class
+        modified_row[f"acft_class_{new_class}"] = 1
+
+        # Predict
         try:
-            pred = model.predict(df_input)[0]
+            pred = model.predict(prepare_input(modified_row, expected_columns))[0]
             results.append(
-                {"sample_id": idx, "aircraft": acft, "predicted_co2_km": pred}
+                {
+                    "sample_id": idx,
+                    "original_class": original_class,
+                    "new_class": new_class,
+                    "predicted_co2_km": pred,
+                    "distance": row["ask"],  # Example of preserving original feature
+                }
             )
         except Exception as e:
-            print(f"Skipping {acft} due to error: {e}")
+            print(f"Error testing {original_class}→{new_class}: {str(e)}")
+
+# Analysis
+df_results = pd.DataFrame(results)
+
+# Visualization 1: Class Comparison
+plt.figure(figsize=(14, 6))
+sns.boxplot(
+    data=df_results, x="new_class", y="predicted_co2_km", order=aircraft_classes
+)
+plt.title("CO₂/km Distribution by Aircraft Class")
+plt.xlabel("Aircraft Class")
+plt.ylabel("kg CO₂ per km")
+plt.tight_layout()
+
+# Visualization 2: Change Analysis
+plt.figure(figsize=(14, 6))
+for orig_class in df_results["original_class"].unique():
+    subset = df_results[df_results["original_class"] == orig_class]
+    sns.lineplot(
+        data=subset,
+        x="new_class",
+        y="predicted_co2_km",
+        label=f"Originally {orig_class}",
+        marker="o",
+        sort=False,
+    )
+plt.title("Impact of Changing Aircraft Class")
+plt.xlabel("New Aircraft Class")
+plt.ylabel("kg CO₂ per km")
+plt.legend(title="Original Class")
+plt.tight_layout()
+
+plt.show()
