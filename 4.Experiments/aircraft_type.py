@@ -4,7 +4,7 @@ import joblib
 import matplotlib.pyplot as plt
 
 # Load trained model
-model = joblib.load("../2.Models/random_forest_model.pkl")
+model = joblib.load(r"c:\Users\Afag\Downloads\random_forest_model.pkl")
 
 # Training columns (from X_train)
 X_train = pd.read_parquet(
