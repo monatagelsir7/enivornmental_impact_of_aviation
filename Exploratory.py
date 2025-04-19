@@ -42,3 +42,15 @@ plt.legend(handles=legend_handles, title="Flight Type")
 
 plt.tight_layout()
 plt.show()
+
+
+
+acft_type_emissions=df.groupby("acft_class")["co2_per_distance"].mean()
+acft_type_emissions=acft_type_emissions.reset_index()
+acft_type_emissions=acft_type_emissions.sort_values(by="co2_per_distance")
+acft_type_emissions=acft_type_emissions[~acft_type_emissions["acft_class"].isin(["OTHER","Unknown"])]
+plt.bar(acft_type_emissions["acft_class"], acft_type_emissions["co2_per_distance"], color="skyblue", width=0.7, edgecolor='black')
+plt.xlabel("Aircraft Type")
+plt.ylabel("CO2 Emissions per KM travelled (kg CO2/km)")
+plt.title("Average emission distribution for different aircraft types")
+plt.show()
