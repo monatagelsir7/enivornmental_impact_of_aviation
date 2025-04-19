@@ -17,9 +17,6 @@ import numpy as np
 import joblib
 import matplotlib.pyplot as plt
 import textwrap
-import shap
-shap.initjs()
-
 
 # Model
 model = joblib.load('../2.Models/random_forest_model.pkl')
@@ -40,7 +37,7 @@ def prepare_input(raw_dict, expected_columns):
 base_input = {
     'airline_iata': 'AF', # Air France
     'acft_class': 'NB', # Narrow Body
-    'acft_icao': 'A321', # Airbus A321
+    'acft_icao': 'B752', # Airbus A321
     'departure_continent': 'EU', # Europe 
     'departure_country': 'CH', # Switzerland
     'iata_departure': 'ZRH', # Zurich Airport
@@ -95,14 +92,10 @@ plt.show()
 
 
 note_text = (
-    "Note: This prediction is based on a real-world flight with the following parameters:\n"
-    "Airline: Air France (AF), Aircraft: Airbus A321 (Narrow Body),\n"
-    "Route: Zurich (ZRH), Switzerland to Paris Charles de Gaulle (CDG), France,\n"
-    "International flight, ASK = 1,400,814.103, Fuel burn = 45,330.2042.\n"
-    "Passenger Load Factor (RPK/ASK) indicates how efficiently seat capacity is used, "
-    "higher values mean more seats are filled with passengers.\n"
-    "RPK (Revenue Passenger Kilometers) is the total number of kilometers flown by paying passengers.\n"
-    "ASK (Available Seat Kilometers) is a measure of the number of kilometers available for passengers to fly."
+    "Note: Prediction is based on a real Air France flight from Zurich (ZRH) to Paris CDG.\n"
+    "Original aircraft was an Airbus A321, but for this counterfactual experiment, only the\n"
+    "aircraft type was changed to a Boeing 757-200 (Narrow Body), keeping all other inputs fixed.\n"
+    "Passenger Load Factor (RPK/ASK) was varied from 0.25 to 1.0 to evaluate its effect\n"
 )
 
 wrapped_text = "\n".join(textwrap.wrap(note_text, width=85))
