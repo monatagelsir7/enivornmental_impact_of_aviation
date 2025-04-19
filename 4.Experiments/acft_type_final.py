@@ -16,11 +16,11 @@ class AircraftClassExperiment:
         self.aircraft_classes = ["NB", "WB", "RJ", "TP", "PJ", "PP", "OTHER", "Unknown"]
 
         # output directory
-        self.output_dir = r"c:\Users\Afag\Downloads"
+        self.output_dir = r"C:\Users\DELL\ML Project\enivornmental_impact_of_aviation\4.Experiments\plotting"
         os.makedirs(self.output_dir, exist_ok=True)
 
         # Load resources
-        self.model = joblib.load(r"c:\Users\Afag\Downloads\random_forest_model.pkl")
+        self.model = joblib.load(r"C:\Users\DELL\Downloads\random_forest_model.pkl")
         self.X_train = pd.read_parquet(
             "https://github.com/monatagelsir7/enivornmental_impact_of_aviation/raw/refs/heads/main/Test-Train-Validation%20Data/X_train.parquet"
         )
