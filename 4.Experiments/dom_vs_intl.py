@@ -59,3 +59,63 @@ print("Validation Set Performance:")
 print(f"R-squared (R²): {r2_val:.4f}")
 print(f"Root Mean Squared Error (RMSE): {rmse_val:.4f}")
 print(f"Mean Absolute Error (MAE): {mae_val:.4f}")
+
+
+
+# _________________________________________________________________
+
+import shap
+explainer = shap.TreeExplainer(rf_model)
+shap_values = explainer.shap_values(X_test)
+
+# summary plot
+shap.summary_plot(shap_values, X_test)
+
+
+errors = y_val - y_pred_val
+
+plt.figure(figsize=(8, 5))
+plt.hist(errors, bins=50, color='skyblue', edgecolor='black')
+plt.title("Distribution of Prediction Errors (Validation Set)")
+plt.xlabel("Prediction Error")
+plt.ylabel("Frequency")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+
+plt.figure(figsize=(6, 6))
+plt.scatter(y_val, y_pred_val, alpha=0.3, label='Validation')
+plt.plot([y_val.min(), y_val.max()], [y_val.min(), y_val.max()], 'r--')
+plt.xlabel("Actual CO₂ per Distance")
+plt.ylabel("Predicted CO₂ per Distance")
+plt.title("Predicted vs Actual (Validation Set)")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+
+importances = rf_model.feature_importances_
+features = X.columns
+indices = np.argsort(importances)[::-1]
+
+plt.figure(figsize=(12, 6))
+plt.title("Feature Importances")
+plt.bar(range(len(features)), importances[indices], align="center")
+plt.xticks(range(len(features)), features[indices], rotation=90)
+plt.tight_layout()
+plt.show()
+
+
+residuals = y_val - y_pred_val
+
+plt.figure(figsize=(8, 5))
+plt.scatter(y_pred_val, residuals, alpha=0.3)
+plt.axhline(0, color='red', linestyle='--')
+plt.xlabel("Predicted CO₂ per Distance")
+plt.ylabel("Residuals")
+plt.title("Residual Plot (Validation Set)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
