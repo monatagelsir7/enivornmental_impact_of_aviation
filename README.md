@@ -61,7 +61,8 @@ enivornmental_impact_of_aviation-2
 │  └─ others_frequent_flights_by_types.xlsx
 ├─ 2.Models
 │  ├─ 0.linear_regression.py
-│  ├─ 1.random_forest.py
+│  ├─ 1.random_forest_baseline.py
+│  ├─ 1.random_forest_finetuned.py
 │  ├─ 2.xg_boost.py
 │  ├─ 3.cat_boost.py
 │  ├─ random_forest_model.pkl
