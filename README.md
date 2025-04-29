@@ -39,6 +39,7 @@ By analyzing emissions patterns across continents, aircraft types, and operation
 
 ## 📁 Repository Structure
 
+```
 enivornmental_impact_of_aviation-2
 ├─ 0.Data_after_cleaning
 │  ├─ AeroSCOPE_global_aviation_traffic_dataset_16_11_0320.csv
@@ -78,6 +79,7 @@ enivornmental_impact_of_aviation-2
    ├─ y_test.parquet
    ├─ y_train.parquet
    └─ y_val.parquet
+```
 
 ## 🧠 Models Used
 - **Linear Regression** (baseline model)
