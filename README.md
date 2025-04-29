@@ -27,6 +27,8 @@ By analyzing emissions patterns across continents, aircraft types, and operation
   - Aircraft class & ICAO code
   - Fuel burn, seat capacity, distance
   - Derived metrics like ASK, RPK, and CO₂ per distance
+Note1: refer to code_dictionay.csv to better understand the dataset features.
+Note2: for train/validation/test splitting and EDA "0.Data_after_cleaning/cleaned_aviation_data_v3.parquet" file used.
 
 ## 🧪 Experiments
 | No. | Name | Description |
