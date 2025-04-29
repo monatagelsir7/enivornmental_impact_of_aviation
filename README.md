@@ -20,7 +20,7 @@ By analyzing emissions patterns across continents, aircraft types, and operation
     - Contribute to the understanding of aviation's environmental impact.
 
 ## 🗃️ Dataset
-- **Source**: [AeroSCOPE Dataset (ICCT)](https://theicct.org/publication/aeroscope-method-quantifying-comparing-aviation-emissions/)
+- **Source**: [AeroSCOPE Dataset (ICCT)](https://zenodo.org/records/10143773)
 - **Size**: 200,000+ flight records from 2019.
 - **Variables include**:
   - Departure & arrival country/continent
